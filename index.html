@@ -136,8 +136,8 @@
                 <p class="wishlist__desc">Déjanos tu email. Cuando el libro esté listo, tú serás el primero en saberlo.
                 </p>
 
-                <form class="wishlist__form" id="wishlist-form" action="https://formspree.io/f/YOUR_FORM_ID"
-                    method="POST">
+                <form class="wishlist__form" id="wishlist-form" name="lista-espera" method="POST" data-netlify="true">
+                    <input type="hidden" name="form-name" value="lista-espera">
                     <div class="wishlist__row">
                         <input type="email" name="email" id="email" class="wishlist__input" placeholder="tu@email.com"
                             required autocomplete="email">

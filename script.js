@@ -20,7 +20,7 @@
     );
     reveals.forEach((el) => observer.observe(el));
 
-    // ─── Form ────────────────────────────────
+    // ─── Netlify Form ────────────────────────
     const form = document.getElementById('wishlist-form');
     const submitBtn = document.getElementById('submit-btn');
     const btnText = submitBtn.querySelector('.wishlist__btn-text');
@@ -29,36 +29,42 @@
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const email = form.querySelector('#email').value.trim();
         if (!email) return;
 
+        // Loading state
         btnText.hidden = true;
         btnLoading.hidden = false;
         submitBtn.disabled = true;
 
         try {
-            const res = await fetch(form.action, {
+            const res = await fetch('/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify({ email }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(new FormData(form)).toString(),
             });
 
-            if (res.ok || form.action.includes('YOUR_FORM_ID')) {
+            if (res.ok) {
                 form.hidden = true;
                 successMsg.hidden = false;
             } else {
                 throw new Error();
             }
         } catch {
-            // Demo fallback — remove once Formspree is configured
-            if (form.action.includes('YOUR_FORM_ID')) {
-                form.hidden = true;
-                successMsg.hidden = false;
-                return;
-            }
+            // Restore button on error
             btnText.hidden = false;
             btnLoading.hidden = true;
             submitBtn.disabled = false;
+
+            const emailInput = form.querySelector('#email');
+            emailInput.style.borderColor = '#ef4444';
+            emailInput.value = '';
+            emailInput.placeholder = 'Algo salió mal. Inténtalo de nuevo.';
+            setTimeout(() => {
+                emailInput.style.borderColor = '';
+                emailInput.placeholder = 'tu@email.com';
+            }, 3000);
         }
     });
 
