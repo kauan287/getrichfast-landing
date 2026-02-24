@@ -23,8 +23,6 @@
     // ─── Netlify Form ────────────────────────
     const form = document.getElementById('wishlist-form');
     const submitBtn = document.getElementById('submit-btn');
-    const btnText = submitBtn.querySelector('.wishlist__btn-text');
-    const btnLoading = submitBtn.querySelector('.wishlist__btn-loading');
     const successMsg = document.getElementById('success-message');
 
     form.addEventListener('submit', async (e) => {
@@ -33,10 +31,8 @@
         const email = form.querySelector('#email').value.trim();
         if (!email) return;
 
-        // Loading state
-        btnText.hidden = true;
-        btnLoading.hidden = false;
         submitBtn.disabled = true;
+        submitBtn.textContent = '...';
 
         try {
             const res = await fetch('/', {
@@ -52,18 +48,16 @@
                 throw new Error();
             }
         } catch {
-            // Restore button on error
-            btnText.hidden = false;
-            btnLoading.hidden = true;
             submitBtn.disabled = false;
+            submitBtn.textContent = 'I want to be first';
 
             const emailInput = form.querySelector('#email');
             emailInput.style.borderColor = '#ef4444';
             emailInput.value = '';
-            emailInput.placeholder = 'Algo salió mal. Inténtalo de nuevo.';
+            emailInput.placeholder = 'Something went wrong. Try again.';
             setTimeout(() => {
                 emailInput.style.borderColor = '';
-                emailInput.placeholder = 'tu@email.com';
+                emailInput.placeholder = 'you@email.com';
             }, 3000);
         }
     });
